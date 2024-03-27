@@ -1,0 +1,19 @@
+AllCops:
+  NewCops: enable
+  DisplayStyleGuide: true
+
+Style/Documentation:
+  Enabled: false
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "test/**/*"
+
+Metrics/AbcSize:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "test/**/*"
