@@ -13,6 +13,10 @@ Gem::Specification.new do |s|
   s.summary       = 'Simple runtime type checking for Ruby method signatures'
   s.required_ruby_version = '>= 3.2'
 
+  a.metadata['homepage_uri'] = spec.homepage
+  a.metadata['source_code_uri'] = spec.homepage
+  a.metadata['changelog_uri'] = "#{spec.homepage}/releases"
+
   s.files         = Dir.glob('{bin/*,lib/**/*,[A-Z]*}')
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
