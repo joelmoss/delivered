@@ -10,6 +10,8 @@ can alos chreck the return value of the method.
 
 ```ruby
 class User
+  extend Delivered::Signature
+
   sig String, age: Integer, returns: String
   def create(name, age:)
     "User #{name} created with age #{age}"
