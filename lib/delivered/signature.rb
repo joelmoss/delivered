@@ -2,7 +2,9 @@
 
 module Delivered
   module Signature
-    def sig(*sig_args, returns: nil, **sig_kwargs) # rubocop:disable Lint/UnusedMethodArgument
+    NULL = Object.new
+
+    def sig(*sig_args, returns: NULL, **sig_kwargs)
       meta = class << self; self; end
       meta.send :define_method, :method_added do |name|
         meta.send :remove_method, :method_added
@@ -17,11 +19,15 @@ module Delivered
             value => ^(sig_kwargs[key])
           end
 
-          if block
-            send(:"__#{name}", *args, **kwargs, &block).tap { |x| x => returns }
-          else
-            send(:"__#{name}", *args, **kwargs).tap { |x| x => returns }
-          end
+          result = if block
+                     send(:"__#{name}", *args, **kwargs, &block)
+                   else
+                     send(:"__#{name}", *args, **kwargs)
+                   end
+
+          result => ^returns if returns != NULL
+
+          result
         end
       end
     end

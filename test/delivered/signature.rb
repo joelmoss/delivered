@@ -6,7 +6,7 @@ describe Delivered::Signature do
 
     attr_reader :town, :blk
 
-    sig String, Integer, town: String, returns: User
+    sig String, Integer, town: String
     def initialize(name, age = nil, town: nil, &block)
       @name = name
       @age = age
@@ -16,15 +16,39 @@ describe Delivered::Signature do
 
     sig returns: String
     def to_s = "#{@name}, #{@age}"
+
+    sig returns: Integer
+    def age = @age.to_s
+
+    sig Integer, returns: Integer
+    attr_writer :age
   end
 
   it 'supports positional args' do
-    expect(User.new('Joel', 47).to_s).to be == 'Joel, 47'
+    user = User.new('Joel', 47)
+    expect(user.to_s).to be == 'Joel, 47'
   end
+
+  # it 'supports optional positional args'
 
   it 'supports block' do
     user = User.new('Joel', 47) { 'Hello' }
     expect(user.blk.call).to be == 'Hello'
+  end
+
+  it 'checks return type' do
+    user = User.new('Joel', 47)
+    expect(user.to_s).to be == 'Joel, 47'
+  end
+
+  it 'raises on incorrect return type' do
+    user = User.new('Joel', 47)
+    expect { user.age }.to raise_exception NoMatchingPatternError
+  end
+
+  it 'checks return type with args' do
+    user = User.new('Joel', 47)
+    expect(user.age = 48).to be == 48
   end
 
   it 'raises on missing args' do
