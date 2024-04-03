@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/joelmoss/delivered'
   s.licenses      = ['MIT']
   s.summary       = 'Simple runtime type checking for Ruby method signatures'
-  s.required_ruby_version = '>= 3.2'
+  s.required_ruby_version = '>= 3.1'
 
   s.metadata['homepage_uri'] = s.homepage
   s.metadata['source_code_uri'] = s.homepage
