@@ -6,7 +6,7 @@ module Delivered
 
     def sig(*sig_args, returns: NULL, **sig_kwargs)
       meta = class << self; self; end
-      sig_check = ->(klass, name, *args, **kwargs, &block) {
+      sig_check = lambda { |klass, name, *args, **kwargs, &block|
         sig_args.each.with_index do |arg, i|
           args[i] => ^arg
         end
