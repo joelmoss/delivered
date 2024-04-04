@@ -6,7 +6,10 @@ describe Delivered::Signature do
 
     attr_reader :town, :blk
 
-    sig String, Integer, town: String
+    sig(Integer) { Integer }
+    attr_writer :age
+
+    sig String, town: String
     def initialize(name, age = nil, town: nil, &block)
       @name = name
       @age = age
@@ -14,24 +17,71 @@ describe Delivered::Signature do
       @blk = block
     end
 
-    sig returns: String
+    sig(String, age: Integer) { Integer }
+    def with_block_return(name, age:) = 1 # rubocop:disable Lint/UnusedMethodArgument
+
+    sig(String, age: Integer) { Integer }
+    def with_incorrect_block_return = 'hello'
+
+    sig [String, age: Integer] => Integer
+    def with_incorrect_hash_return = 'hello'
+
+    sig [String, age: Integer] => Integer
+    def with_hash_return(name, age:) = 1 # rubocop:disable Lint/UnusedMethodArgument
+
+    sig [] => String
     def to_s = "#{@name}, #{@age}"
 
-    sig returns: Integer
+    sig { Integer }
     def age = @age.to_s
 
-    sig Integer, returns: Integer
-    attr_writer :age
+    sig(String, _age: Integer) { Array }
+    def self.where(_name, _age: nil) = []
 
-    sig String, _age: Integer, returns: Array
-    def self.where(_name, _age: nil)
-      []
+    sig [String] => Array
+    def self.find_by_name(name) = User.new(name)
+  end
+
+  with 'return type with hash' do
+    it 'succeeds' do
+      user = User.new('Joel')
+      expect(user.with_hash_return('Joel', age: 47)).to be == 1
     end
 
-    sig String, returns: Array
-    def self.find_by_name(name)
-      User.new(name)
+    it 'raises on incorrect types' do
+      user = User.new('Joel')
+      expect { user.with_hash_return }.to raise_exception NoMatchingPatternError
     end
+
+    it 'raises on incorrect return type' do
+      user = User.new('Joel')
+      expect { user.with_incorrect_hash_return }.to raise_exception NoMatchingPatternError
+    end
+  end
+
+  with 'return type as block' do
+    it 'succeeds' do
+      user = User.new('Joel')
+      expect(user.with_block_return('Joel', age: 47)).to be == 1
+    end
+
+    it 'raises on incorrect types' do
+      user = User.new('Joel')
+      expect { user.with_block_return }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'raises on incorrect return type' do
+      user = User.new('Joel')
+      expect { user.with_incorrect_block_return }.to raise_exception NoMatchingPatternError
+    end
+  end
+
+  it 'raises on mix of returns' do
+    extend Delivered::Signature
+
+    expect do
+      sig([] => Integer) { Integer }
+    end.to raise_exception(ArgumentError, message: be =~ /Cannot mix/)
   end
 
   it 'supports positional args' do
@@ -39,26 +89,21 @@ describe Delivered::Signature do
     expect(user.to_s).to be == 'Joel, 47'
   end
 
-  # it 'supports optional positional args'
-
   it 'supports block' do
     user = User.new('Joel', 47) { 'Hello' }
     expect(user.blk.call).to be == 'Hello'
   end
 
-  it 'checks return type' do
-    user = User.new('Joel', 47)
-    expect(user.to_s).to be == 'Joel, 47'
-  end
+  with 'attr_writer' do
+    it 'succeeds' do
+      user = User.new('Joel')
+      expect(user.age = 47).to be == 47
+    end
 
-  it 'raises on incorrect return type' do
-    user = User.new('Joel', 47)
-    expect { user.age }.to raise_exception NoMatchingPatternError
-  end
-
-  it 'checks return type with args' do
-    user = User.new('Joel', 47)
-    expect(user.age = 48).to be == 48
+    it 'raise on incorrect type' do
+      user = User.new('Joel', 47)
+      expect { user.age = '47' }.to raise_exception NoMatchingPatternError
+    end
   end
 
   it 'raises on missing args' do

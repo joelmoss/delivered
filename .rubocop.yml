@@ -5,6 +5,11 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+Style/HashAsLastArrayItem:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 100
 
 Lint/ConstantDefinitionInBlock:
   Exclude:
@@ -13,6 +18,10 @@ Lint/ConstantDefinitionInBlock:
 Metrics/AbcSize:
   Enabled: false
 Metrics/MethodLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
   Enabled: false
 
 Metrics/BlockLength:
