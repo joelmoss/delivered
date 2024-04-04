@@ -3,14 +3,32 @@
 describe Delivered::Types do
   T = Delivered::Types
 
-  describe 'Union' do
-    it 'is within union' do
-      assert T.Union(:one, :two) === :one
+  describe 'Any' do
+    with 'no arguments' do
+      it 'any type or nil' do
+        assert T.Any === :one
+        assert T.Any === 'one'
+        assert T.Any === nil
+      end
     end
 
-    it 'raises when value is not in union' do
-      expect { :three => ^(T.Union(:one, :two)) }.to raise_exception NoMatchingPatternError
-      expect { :one => ^(T.Union(:one, :two)) }.not.to raise_exception
+    with 'arguments' do
+      it 'one of given arg' do
+        assert T.Any(:one, :two) === :one
+        assert T.Any(String, Integer) === 'one'
+        assert T.Any(String, Integer) === 1
+        assert T.Any(Integer, nil) === nil
+      end
+    end
+
+    it 'raises when value is not valid' do
+      expect { :three => ^(T.Any(:one, :two)) }.to raise_exception NoMatchingPatternError
+      expect { :one => ^(T.Any(:one, :two)) }.not.to raise_exception
+      expect { 'one' => ^(T.Any(Symbol, String)) }.not.to raise_exception
+      expect { 'one' => ^(T.Any) }.not.to raise_exception
+      expect { nil => ^(T.Any) }.not.to raise_exception
+      expect { nil => ^(T.Any(String, nil)) }.not.to raise_exception
+      expect { true => ^(T.Any(String, nil)) }.to raise_exception NoMatchingPatternError
     end
   end
 

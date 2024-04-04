@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Delivered
-  class UnionType
+  class AnyType
     def initialize(*types)
       @types = types
     end
 
     def ===(value)
-      @types.any? { |type| type === value }
+      @types.empty? ? true : @types.any? { |type| type === value }
     end
   end
 
@@ -35,7 +35,7 @@ module Delivered
     module_function
 
     def Nilable(type = nil) = NilableType.new(type)
-    def Union(*types) = UnionType.new(*types)
+    def Any(*types) = AnyType.new(*types)
     def Boolean = BooleanType.new
   end
 end

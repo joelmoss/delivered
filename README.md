@@ -71,18 +71,32 @@ sig validate: T.Boolean
 def create(validate:); end
 ```
 
-#### `Union`
+#### `Any`
 
-Value **MUST** be a union of the given list of values, that is, the value must be one of the given list.
+Value **MUST** be any of the given list of values, that is, the value must be one of the given list.
 
 ```ruby
-sig T.Union(:male, :female)
+sig T.Any(:male, :female)
 def create(gender); end
+```
+
+If no type is given, the value **CAN** be any type or value.
+
+```ruby
+sig save: T.Any
+def create(save: nil); end
+```
+
+You can also pass `nil` to allow a nil value alongside any other types you provide.
+
+```ruby
+sig T.Any(String, nil)
+def create(save = nil); end
 ```
 
 #### `Nilable`
 
-When a type is given, the value **MUST** be nil or of the given type.
+When a type is given, the value **MUST** be nil **OR** of the given type.
 
 ```ruby
 sig save: T.Nilable(String)
@@ -97,4 +111,28 @@ If no type is given, the value **CAN** be nil. This essentially allows any value
 ```ruby
 sig save: T.Nilable
 def create(save: nil); end
+```
+
+You may notice that `Nilable` is interchangeable with `Any`. The following are equivilent:
+
+```ruby
+sig save: T.Nilable
+def create(save: nil); end
+```
+
+```ruby
+sig save: T.Any
+def create(save: nil); end
+```
+
+As are these:
+
+```ruby
+sig T.Nilable(String)
+def update(name = nil); end
+```
+
+```ruby
+sig T.Any(String, nil)
+def update(name = nil); end
 ```
