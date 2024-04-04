@@ -53,12 +53,12 @@ describe Delivered::Signature do
 
     it 'raises on incorrect types' do
       user = User.new('Joel')
-      expect { user.with_hash_return }.to raise_exception NoMatchingPatternError
+      expect { user.with_hash_return }.to raise_exception Delivered::ArgumentError
     end
 
     it 'raises on incorrect return type' do
       user = User.new('Joel')
-      expect { user.with_incorrect_hash_return }.to raise_exception NoMatchingPatternError
+      expect { user.with_incorrect_hash_return }.to raise_exception Delivered::ArgumentError
     end
   end
 
@@ -70,12 +70,12 @@ describe Delivered::Signature do
 
     it 'raises on incorrect types' do
       user = User.new('Joel')
-      expect { user.with_block_return }.to raise_exception NoMatchingPatternError
+      expect { user.with_block_return }.to raise_exception Delivered::ArgumentError
     end
 
     it 'raises on incorrect return type' do
       user = User.new('Joel')
-      expect { user.with_incorrect_block_return }.to raise_exception NoMatchingPatternError
+      expect { user.with_incorrect_block_return }.to raise_exception Delivered::ArgumentError
     end
   end
 
@@ -105,21 +105,21 @@ describe Delivered::Signature do
 
     it 'raise on incorrect type' do
       user = User.new('Joel', 47)
-      expect { user.age = '47' }.to raise_exception NoMatchingPatternError
+      expect { user.age = '47' }.to raise_exception Delivered::ArgumentError
     end
   end
 
   it 'raises on incorrect Delivered type' do
     user = User.new('Joel')
-    expect { user.active = 1 }.to raise_exception NoMatchingPatternError
+    expect { user.active = 1 }.to raise_exception Delivered::ArgumentError
   end
 
   it 'raises on missing args' do
-    expect { User.new }.to raise_exception NoMatchingPatternError
+    expect { User.new }.to raise_exception Delivered::ArgumentError
   end
 
   it 'raises on incorrect arg type' do
-    expect { User.new 1 }.to raise_exception NoMatchingPatternError
+    expect { User.new 1 }.to raise_exception Delivered::ArgumentError
   end
 
   it 'supports keyword args' do
@@ -127,7 +127,7 @@ describe Delivered::Signature do
   end
 
   it 'raises on incorrect kwarg type' do
-    expect { User.new('Joel', town: 1) }.to raise_exception NoMatchingPatternError
+    expect { User.new('Joel', town: 1) }.to raise_exception Delivered::ArgumentError
   end
 
   with 'class methods' do
@@ -136,15 +136,15 @@ describe Delivered::Signature do
     end
 
     it 'raises on incorrect return type' do
-      expect { User.find_by_name('Hugo') }.to raise_exception NoMatchingPatternError
+      expect { User.find_by_name('Hugo') }.to raise_exception Delivered::ArgumentError
     end
 
     it 'raises on missing args' do
-      expect { User.where }.to raise_exception NoMatchingPatternError
+      expect { User.where }.to raise_exception Delivered::ArgumentError
     end
 
     it 'raises on incorrect arg type' do
-      expect { User.where(1) }.to raise_exception NoMatchingPatternError
+      expect { User.where(1) }.to raise_exception Delivered::ArgumentError
     end
 
     it 'supports keyword args' do
@@ -152,7 +152,7 @@ describe Delivered::Signature do
     end
 
     it 'raises on incorrect kwarg type' do
-      expect { User.where(1, _age: 'twentyseven') }.to raise_exception NoMatchingPatternError
+      expect { User.where(1, _age: 'twentyseven') }.to raise_exception Delivered::ArgumentError
     end
   end
 end

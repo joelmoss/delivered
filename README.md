@@ -1,5 +1,7 @@
 # Delivered: Simple runtime type checking for Ruby method signatures
 
+> Signed, Sealed, Delivered 🎹
+
 Delivered gives you the ability to define method signatures in Ruby, and have them checked at
 runtime. This is useful for ensuring that your methods are being called with the correct arguments,
 and for providing better error messages when they are not. It also serves as a nice way of
@@ -22,7 +24,7 @@ end
 ```
 
 If an invalid argument is given to `User#create`, for example, if `age` is a `String` instead of
-the required `Integer`, a `NoMatchingPatternError` exception will be raised.
+the required `Integer`, a `Delivered::ArgumentError` exception will be raised.
 
 ### Return Types
 
