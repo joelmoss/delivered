@@ -22,6 +22,16 @@ describe Delivered::Signature do
 
     sig Integer, returns: Integer
     attr_writer :age
+
+    sig String, _age: Integer, returns: Array
+    def self.where(_name, _age: nil)
+      []
+    end
+
+    sig String, returns: Array
+    def self.find_by_name(name)
+      User.new(name)
+    end
   end
 
   it 'supports positional args' do
@@ -65,5 +75,31 @@ describe Delivered::Signature do
 
   it 'raises on incorrect kwarg type' do
     expect { User.new('Joel', town: 1) }.to raise_exception NoMatchingPatternError
+  end
+
+  with 'class methods' do
+    it 'supports class method signatures' do
+      expect(User.where('Joel')).to be == []
+    end
+
+    it 'raises on incorrect return type' do
+      expect { User.find_by_name('Hugo') }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'raises on missing args' do
+      expect { User.where }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'raises on incorrect arg type' do
+      expect { User.where(1) }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'supports keyword args' do
+      expect(User.where('hugo', _age: 27)).to be == []
+    end
+
+    it 'raises on incorrect kwarg type' do
+      expect { User.where(1, _age: 'twentyseven') }.to raise_exception NoMatchingPatternError
+    end
   end
 end
