@@ -2,8 +2,6 @@
 
 module Delivered
   module Signature
-    NULL = Object.new
-
     def sig(*sig_args, **sig_kwargs, &return_blk)
       # ap [sig_args, sig_kwargs, return_blk]
 

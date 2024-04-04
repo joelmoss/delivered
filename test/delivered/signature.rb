@@ -35,6 +35,9 @@ describe Delivered::Signature do
     sig { Integer }
     def age = @age.to_s
 
+    sig(Delivered::Types.Boolean)
+    def active=(val); end
+
     sig(String, _age: Integer) { Array }
     def self.where(_name, _age: nil) = []
 
@@ -104,6 +107,11 @@ describe Delivered::Signature do
       user = User.new('Joel', 47)
       expect { user.age = '47' }.to raise_exception NoMatchingPatternError
     end
+  end
+
+  it 'raises on incorrect Delivered type' do
+    user = User.new('Joel')
+    expect { user.active = 1 }.to raise_exception NoMatchingPatternError
   end
 
   it 'raises on missing args' do

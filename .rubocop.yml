@@ -7,6 +7,14 @@ Style/Documentation:
   Enabled: false
 Style/HashAsLastArrayItem:
   Enabled: false
+Style/CaseEquality:
+  Enabled: false
+Style/NilComparison:
+  Enabled: false
+
+Naming/MethodName:
+  Exclude:
+    - "lib/delivered/types.rb"
 
 Layout/LineLength:
   Max: 100
@@ -23,7 +31,6 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
-
 Metrics/BlockLength:
   Exclude:
     - "test/**/*"
