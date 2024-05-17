@@ -73,6 +73,15 @@ sig validate: T.Boolean
 def create(validate:); end
 ```
 
+#### `RespondTo`
+
+Value **MUST** be respond to the given method(s).
+
+```ruby
+sig name: T.RespondTo(:to_s)
+def create(name:); end
+```
+
 #### `Any`
 
 Value **MUST** be any of the given list of values, that is, the value must be one of the given list.

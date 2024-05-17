@@ -13,7 +13,7 @@ describe Delivered::Types do
     end
 
     with 'arguments' do
-      it 'one of given arg' do
+      it 'is one of given arg' do
         assert T.Any(:one, :two) === :one
         assert T.Any(String, Integer) === 'one'
         assert T.Any(String, Integer) === 1
@@ -29,6 +29,17 @@ describe Delivered::Types do
       expect { nil => ^(T.Any) }.not.to raise_exception
       expect { nil => ^(T.Any(String, nil)) }.not.to raise_exception
       expect { true => ^(T.Any(String, nil)) }.to raise_exception NoMatchingPatternError
+    end
+  end
+
+  describe 'RespondTo' do
+    it 'should respond to given method' do
+      assert T.RespondTo(:to_s) === 'foo'
+      assert T.RespondTo(:to_s, :to_i) === 'foo'
+    end
+
+    it 'raises when not respond to' do
+      expect { :foo => ^(T.RespondTo(:bar)) }.to raise_exception NoMatchingPatternError
     end
   end
 

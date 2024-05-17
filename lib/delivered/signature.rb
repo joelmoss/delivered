@@ -34,7 +34,7 @@ module Delivered
           args[i] => ^arg
         rescue NoMatchingPatternError => e
           raise Delivered::ArgumentError,
-                "`#{cname}` expected `#{arg}` as positional arg #{i}, but received " \
+                "`#{cname}` expected #{arg.inspect} as argument #{i}, but received " \
                 "`#{args[i].inspect}`",
                 caller, cause: e
         end
@@ -43,8 +43,8 @@ module Delivered
           value => ^(sig_kwargs[key])
         rescue NoMatchingPatternError => e
           raise Delivered::ArgumentError,
-                "`#{cname}` expected `#{sig_kwargs[key]}` as keyword arg :#{key}, but received " \
-                "`#{value.inspect}`",
+                "`#{cname}` expected #{sig_kwargs[key].inspect} as keyword argument :#{key}, " \
+                "but received `#{value.inspect}`",
                 caller, cause: e
         end
 
@@ -58,7 +58,8 @@ module Delivered
           result => ^returns unless returns.nil?
         rescue NoMatchingPatternError => e
           raise Delivered::ArgumentError,
-                "`#{cname}` expected to return `#{returns}`, but returned `#{result.inspect}`",
+                "`#{cname}` expected to return #{returns.inspect}, " \
+                "but returned `#{result.inspect}`",
                 caller, cause: e
         end
 

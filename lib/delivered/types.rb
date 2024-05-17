@@ -6,8 +6,22 @@ module Delivered
       @types = types
     end
 
+    def inspect = "Any(#{@types.map(&:inspect).join(', ')})"
+
     def ===(value)
       @types.empty? ? true : @types.any? { |type| type === value }
+    end
+  end
+
+  class RespondToType
+    def initialize(*methods)
+      @methods = methods
+    end
+
+    def inspect = "RespondTo(#{@methods.map(&:inspect).join(', ')})"
+
+    def ===(value)
+      @methods.all? { |m| value.respond_to?(m) }
     end
   end
 
@@ -15,6 +29,8 @@ module Delivered
     def initialize(type = nil)
       @type = type
     end
+
+    def inspect = "Nilable(#{@type&.inspect || 'Any'})"
 
     def ===(value)
       (@type.nil? ? true : nil === value) || @type === value
@@ -26,6 +42,8 @@ module Delivered
       freeze
     end
 
+    def inspect = 'Boolean'
+
     def ===(value)
       [true, false].include?(value)
     end
@@ -35,6 +53,7 @@ module Delivered
     module_function
 
     def Nilable(type = nil) = NilableType.new(type)
+    def RespondTo(*methods) = RespondToType.new(*methods)
     def Any(*types) = AnyType.new(*types)
     def Boolean = BooleanType.new
   end
