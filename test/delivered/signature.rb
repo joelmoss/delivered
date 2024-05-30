@@ -92,6 +92,132 @@ describe Delivered::Signature do
     expect(user.to_s).to be == 'Joel, 47'
   end
 
+  with 'rest args' do
+    it 'no args given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, *attributes)
+          [name, attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel')).to be == ['Joel', []]
+    end
+
+    it 'args given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, *attributes)
+          [name, attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel', :foo)).to be == ['Joel', [:foo]]
+    end
+
+    it 'sig args defined' do
+      class Name
+        extend Delivered::Signature
+
+        sig String, String
+        def rest(name, last_name, *attributes)
+          [name, last_name, attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel', 'Moss', :foo)).to be == ['Joel', 'Moss', [:foo]]
+    end
+  end
+
+  with 'rest kwargs' do
+    it 'no kwargs given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, **attributes)
+          [name, attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel')).to be == ['Joel', {}]
+    end
+
+    it 'kwargs given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, **attributes)
+          [name, attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel', foo: :bar)).to be == ['Joel', { foo: :bar }]
+    end
+  end
+
+  with 'named and rest kwargs' do
+    it 'named kwarg given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, age:, **attributes)
+          [name, age:, **attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel', age: 47)).to be == ['Joel', { age: 47 }]
+    end
+
+    it 'named and rest kwarg given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, age:, **attributes)
+          [name, age:, **attributes]
+        end
+      end
+
+      expect(Name.new.rest('Joel', age: 47, town: 'Chorley'))
+        .to be == ['Joel', { age: 47, town: 'Chorley' }]
+    end
+  end
+
+  with 'rest args and kwargs' do
+    it 'no args given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, *args, **kwargs)
+          [name, args, kwargs]
+        end
+      end
+
+      expect(Name.new.rest('Joel')).to be == ['Joel', [], {}]
+    end
+
+    it 'args given' do
+      class Name
+        extend Delivered::Signature
+
+        sig String
+        def rest(name, *args, **kwargs)
+          [name, args, kwargs]
+        end
+      end
+
+      expect(Name.new.rest('Joel', :foo, bar: :foo)).to be == ['Joel', [:foo], { bar: :foo }]
+    end
+  end
+
   it 'supports block' do
     user = User.new('Joel', 47) { 'Hello' }
     expect(user.blk.call).to be == 'Hello'

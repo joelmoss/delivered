@@ -3,8 +3,6 @@
 module Delivered
   module Signature
     def sig(*sig_args, **sig_kwargs, &return_blk)
-      # ap [sig_args, sig_kwargs, return_blk]
-
       # Block return
       returns = return_blk&.call
 
@@ -20,15 +18,13 @@ module Delivered
         sig_kwargs = sig_args.pop if sig_args.last.is_a?(Hash)
       end
 
-      # ap [sig_args, sig_kwargs, returns]
+      # ap(sig_args:, sig_kwargs:)
 
       meta = class << self; self; end
       sig_check = lambda do |klass, class_method, name, *args, **kwargs, &block| # rubocop:disable Metrics/BlockLength
-        cname = if class_method
-                  "#{klass.name}.#{name}"
-                else
-                  "#{klass.class.name}##{name}"
-                end
+        # ap(args:, kwargs:, params: klass.method(:"__#{name}").parameters)
+
+        cname = class_method ? "#{klass.name}.#{name}" : "#{klass.class.name}##{name}"
 
         sig_args.each.with_index do |arg, i|
           args[i] => ^arg
@@ -39,13 +35,15 @@ module Delivered
                 caller, cause: e
         end
 
-        kwargs.each do |key, value|
-          value => ^(sig_kwargs[key])
-        rescue NoMatchingPatternError => e
-          raise Delivered::ArgumentError,
-                "`#{cname}` expected #{sig_kwargs[key].inspect} as keyword argument :#{key}, " \
-                "but received `#{value.inspect}`",
-                caller, cause: e
+        unless sig_kwargs.empty?
+          kwargs.each do |key, value|
+            value => ^(sig_kwargs[key])
+          rescue NoMatchingPatternError => e
+            raise Delivered::ArgumentError,
+                  "`#{cname}` expected #{sig_kwargs[key].inspect} as keyword argument :#{key}, " \
+                  "but received `#{value.inspect}`",
+                  caller, cause: e
+          end
         end
 
         result = if block
@@ -66,6 +64,7 @@ module Delivered
         result
       end
 
+      # Instance method redefinition
       meta.send :define_method, :method_added do |name|
         meta.send :remove_method, :method_added
         meta.send :remove_method, :singleton_method_added
@@ -76,6 +75,7 @@ module Delivered
         end
       end
 
+      # Class method redefinition
       meta.send :define_method, :singleton_method_added do |name|
         next if name == :singleton_method_added
 

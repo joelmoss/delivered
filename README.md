@@ -26,6 +26,16 @@ end
 If an invalid argument is given to `User#create`, for example, if `age` is a `String` instead of
 the required `Integer`, a `Delivered::ArgumentError` exception will be raised.
 
+### Single and Double Splat Arguments
+
+You can use single and double splats in your method signatures, and Delivered will pass them through
+without checking, while still checking the other named positional and keyword arguments.
+
+```ruby
+sig String
+def create(name, *args, foo:, **kwargs); end
+```
+
 ### Return Types
 
 You can also check the return value of the method by passing a Hash with an Array as the key, and
