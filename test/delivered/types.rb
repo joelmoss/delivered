@@ -43,6 +43,24 @@ describe Delivered::Types do
     end
   end
 
+  describe 'RangeOf' do
+    it 'should be a Range of given type' do
+      assert T.RangeOf(Integer) === (1..2)
+      assert T.RangeOf(Integer) === (..2)
+      assert T.RangeOf(Integer) === (1..)
+    end
+
+    it 'raises when not a Range' do
+      expect { 1 => ^(T.RangeOf(Integer)) }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'raises when not a Range of given type' do
+      expect { 1..2 => ^(T.RangeOf(String)) }.to raise_exception NoMatchingPatternError
+      expect { 1.. => ^(T.RangeOf(String)) }.to raise_exception NoMatchingPatternError
+      expect { ..2 => ^(T.RangeOf(String)) }.to raise_exception NoMatchingPatternError
+    end
+  end
+
   describe 'Boolean' do
     it 'should be true or false' do
       assert T.Boolean === true

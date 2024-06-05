@@ -92,6 +92,15 @@ sig name: T.RespondTo(:to_s)
 def create(name:); end
 ```
 
+#### `RangeOf`
+
+Value **MUST** be a Range of the given type
+
+```ruby
+sig name: T.RangeOf(Integer)
+def create(name: 1...2); end
+```
+
 #### `Any`
 
 Value **MUST** be any of the given list of values, that is, the value must be one of the given list.

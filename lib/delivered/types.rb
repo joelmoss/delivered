@@ -13,6 +13,21 @@ module Delivered
     end
   end
 
+  class RangeOfType
+    def initialize(type)
+      @type = type
+    end
+
+    def inspect = "Range(#{@type&.inspect})"
+
+    def ===(value)
+      Range === value && (
+        (@type === value.begin && (nil === value.end || @type === value.end)) ||
+        (@type === value.end && nil === value.begin)
+      )
+    end
+  end
+
   class RespondToType
     def initialize(*methods)
       @methods = methods
@@ -53,6 +68,7 @@ module Delivered
     module_function
 
     def Nilable(type = nil) = NilableType.new(type)
+    def RangeOf(type = nil) = RangeOfType.new(type)
     def RespondTo(*methods) = RespondToType.new(*methods)
     def Any(*types) = AnyType.new(*types)
     def Boolean = BooleanType.new
