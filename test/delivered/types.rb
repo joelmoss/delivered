@@ -43,6 +43,39 @@ describe Delivered::Types do
     end
   end
 
+  describe 'ArrayOf' do
+    it 'should be an Array of given type' do
+      assert T.ArrayOf(Integer) === [1, 2]
+      assert T.ArrayOf(Integer) === []
+    end
+
+    it 'raises when not an Array' do
+      expect { 1 => ^(T.ArrayOf(Integer)) }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'raises when not an Array of given type' do
+      expect { [1] => ^(T.ArrayOf(String)) }.to raise_exception NoMatchingPatternError
+      expect { ['w', 1] => ^(T.ArrayOf(String)) }.to raise_exception NoMatchingPatternError
+    end
+  end
+
+  describe 'Enumerable' do
+    it 'should be an Enumerable of given type' do
+      assert T.Enumerable === []
+      assert T.Enumerable(Integer) === [1, 2]
+      assert T.Enumerable(Integer) === []
+    end
+
+    it 'raises when not an Enumerable' do
+      expect { 1 => ^(T.Enumerable(Integer)) }.to raise_exception NoMatchingPatternError
+    end
+
+    it 'raises when not an Enumerable of given type' do
+      expect { [1] => ^(T.Enumerable(String)) }.to raise_exception NoMatchingPatternError
+      expect { ['w', 1] => ^(T.Enumerable(String)) }.to raise_exception NoMatchingPatternError
+    end
+  end
+
   describe 'RangeOf' do
     it 'should be a Range of given type' do
       assert T.RangeOf(Integer) === (1..2)

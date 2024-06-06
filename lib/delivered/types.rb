@@ -13,6 +13,42 @@ module Delivered
     end
   end
 
+  class EnumerableType
+    def initialize(type)
+      @type = type
+    end
+
+    def inspect = "Enumerable(#{@type.inspect})"
+
+    if Delivered::EXPENSIVE_TYPE_CHECKS
+      def ===(value)
+        Enumerable === value && value.all? { |item| @type === item }
+      end
+    else
+      def ===(value)
+        Enumerable === value && (value.empty? || @type === value.first)
+      end
+    end
+  end
+
+  class ArrayOfType
+    def initialize(type)
+      @type = type
+    end
+
+    def inspect = "ArrayOf(#{@type.inspect})"
+
+    if Delivered::EXPENSIVE_TYPE_CHECKS
+      def ===(value)
+        Array === value && value.all? { |item| @type === item }
+      end
+    else
+      def ===(value)
+        Array === value && (value.empty? || @type === value[0])
+      end
+    end
+  end
+
   class RangeOfType
     def initialize(type)
       @type = type
@@ -68,7 +104,9 @@ module Delivered
     module_function
 
     def Nilable(type = nil) = NilableType.new(type)
-    def RangeOf(type = nil) = RangeOfType.new(type)
+    def Enumerable(type = nil) = EnumerableType.new(type)
+    def ArrayOf(type) = ArrayOfType.new(type)
+    def RangeOf(type) = RangeOfType.new(type)
     def RespondTo(*methods) = RespondToType.new(*methods)
     def Any(*types) = AnyType.new(*types)
     def Boolean = BooleanType.new

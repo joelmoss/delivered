@@ -101,6 +101,29 @@ sig name: T.RangeOf(Integer)
 def create(name: 1...2); end
 ```
 
+#### `ArrayOf`
+
+Value **MUST** be an Array of the given type
+
+```ruby
+sig names: T.ArrayOf(String)
+def create(names: ['Joel', 'Ash']); end
+```
+
+#### `Enumerable`
+
+Value **MUST** be an Enumerable of the optional given type
+
+```ruby
+sig users: T.Enumerable
+def create(users: [1, 2]); end
+```
+
+```ruby
+sig users: T.Enumerable(User)
+def create(users: User.all); end
+```
+
 #### `Any`
 
 Value **MUST** be any of the given list of values, that is, the value must be one of the given list.
