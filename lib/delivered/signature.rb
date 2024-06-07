@@ -28,21 +28,19 @@ module Delivered
 
         sig_args.each.with_index do |arg, i|
           args[i] => ^arg
-        rescue NoMatchingPatternError => e
+        rescue NoMatchingPatternError
           raise Delivered::ArgumentError,
-                "`#{cname}` expected #{arg.inspect} as argument #{i}, but received " \
-                "`#{args[i].inspect}`",
-                caller, cause: e
+                "#{cname} expected #{arg.inspect} as argument #{i}, but received " \
+                "`#{args[i].inspect}`"
         end
 
         unless sig_kwargs.empty?
           kwargs.each do |key, value|
             value => ^(sig_kwargs[key])
-          rescue NoMatchingPatternError => e
+          rescue NoMatchingPatternError
             raise Delivered::ArgumentError,
-                  "`#{cname}` expected #{sig_kwargs[key].inspect} as keyword argument :#{key}, " \
-                  "but received `#{value.inspect}`",
-                  caller, cause: e
+                  "#{cname} expected #{sig_kwargs[key].inspect} as keyword argument :#{key}, " \
+                  "but received `#{value.inspect}`"
           end
         end
 
@@ -54,11 +52,10 @@ module Delivered
 
         begin
           result => ^returns unless returns.nil?
-        rescue NoMatchingPatternError => e
+        rescue NoMatchingPatternError
           raise Delivered::ArgumentError,
                 "`#{cname}` expected to return #{returns.inspect}, " \
-                "but returned `#{result.inspect}`",
-                caller, cause: e
+                "but returned `#{result.inspect}`"
         end
 
         result
