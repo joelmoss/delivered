@@ -18,12 +18,8 @@ module Delivered
         sig_kwargs = sig_args.pop if sig_args.last.is_a?(Hash)
       end
 
-      # ap(sig_args:, sig_kwargs:)
-
       meta = class << self; self; end
       sig_check = lambda do |klass, class_method, name, *args, **kwargs, &block| # rubocop:disable Metrics/BlockLength
-        # ap(args:, kwargs:, params: klass.method(:"__#{name}").parameters)
-
         cname = class_method ? "#{klass.name}.#{name}" : "#{klass.class.name}##{name}"
 
         sig_args.each.with_index do |arg, i|
