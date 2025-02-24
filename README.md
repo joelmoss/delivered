@@ -26,6 +26,13 @@ end
 If an invalid argument is given to `User#create`, for example, if `age` is a `String` instead of
 the required `Integer`, a `Delivered::ArgumentError` exception will be raised.
 
+Delivered also provides a handy `verify!` method to verify the type of any value.
+
+```ruby
+Delivered.verify! 1, Integer
+Delivered.verify! :yes, T.Any(:yes, :no)
+```
+
 ### Single and Double Splat Arguments
 
 You can use single and double splats in your method signatures, and Delivered will pass them through
